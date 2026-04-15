@@ -1,0 +1,12 @@
+# Machine Learning Dependencies
+# These are optional dependencies required for neural network training
+
+# PyTorch for neural networks
+torch>=2.2.0
+torchvision>=0.17.0
+
+# Optional: For GPU acceleration
+# Install separately based on your system:
+# - CUDA: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# - CPU only: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# - Apple Silicon: pip install torch torchvision (native support)

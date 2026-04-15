@@ -1,0 +1,79 @@
+# Large-Scale Physics-Informed Loss MLP Configuration
+experiment:
+  name: "mlp_physics_large"
+  description: "Scaled physics-informed MLP optimizing for P field accuracy"
+  tags:
+    - "mlp"
+    - "physics-informed"
+    - "p-field"
+    - "production"
+
+# Model Configuration
+model:
+  type: "mlp"
+  maxorder: 5              # Higher order for more complex physics
+  hidden_size: 256         # Larger network
+  n_hidden_layers: 3       # Deeper network
+  dropout_rate: 0.1
+  activation: "gelu"
+  
+  # Physics Loss Configuration
+  loss_type: "physics"     # Enable physics-informed loss
+  grid_n_theta: 179        # Full resolution (matches target data)
+  grid_n_phi: 360
+  physics_grid_type: "equiangular"
+  physics_grid_resolution_factor: 1.0
+  physics_field_weight: 0.1
+
+# Training Configuration  
+training:
+  n_samples: 1000          # Much larger dataset
+  epochs: 50               # More training
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 1e-5       # Small regularization
+  
+  # Validation
+  train_ratio: 0.7
+  val_ratio: 0.2
+  test_ratio: 0.1
+  
+  # Logging
+  val_log_frequency: 5
+  detailed_metrics_frequency: 10
+  
+# Data Configuration
+data:
+  generator_mode: "random"
+  scale: 1.0
+  seed: 42
+  
+# Preprocessing
+preprocessing:
+  pca_components: 128      # More PCA components
+  pca_oversample: 6
+  normalize_features: true
+  normalize_targets: false # Disable for P field targets
+
+# Test Dataset
+test_dataset:
+  evaluate: true
+  limit: 500
+
+# Device and Performance
+device: "cpu"  # Use CPU for stability
+num_workers: 4
+pin_memory: false
+
+# Checkpointing
+checkpoint:
+  save_best: true
+  save_last: true
+  save_frequency: 10
+  
+# Early Stopping
+early_stopping:
+  enabled: true
+  patience: 15
+  min_delta: 1e-6
+  monitor: "val_loss"
