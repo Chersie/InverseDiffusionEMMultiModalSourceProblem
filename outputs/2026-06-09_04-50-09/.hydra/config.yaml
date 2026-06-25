@@ -1,0 +1,112 @@
+data:
+  _target_: mpinv.data.real_augmented_pipeline.build_real_augmented_pipeline
+  grid:
+    n_phi: 360
+    n_theta: 179
+    theta_start_deg: 1.0
+    theta_end_deg: 179.0
+  l_max: 5
+  holdout_root: data/raw/real_antenna
+  feature_subdir: E_in_plane
+  n_source: 20
+  n_train_sources: 15
+  n_augmented: 64
+  n_holdout_samples: 0
+  shuffle_seed: 42
+  holdout_shuffle_seed: 314159
+  aug_seed: 4242
+  dropout_prob: 0.1
+  field_sigma: 1.0e-08
+  scale_factor: 1.0
+  aug_chunk_size: 500
+  include_synthetic_test: false
+  n_synthetic_test: 512
+  seed_synthetic_test: 9012
+  smoke_test: true
+  batch_size: 64
+  num_workers: 0
+features:
+  _target_: mpinv.features.raw_flat.RawFlattenPipeline
+  cfg:
+    _target_: mpinv.features.raw_flat.RawFlattenPipelineConfig
+    input_mode: power
+    log_input: false
+    normalise_features: true
+model:
+  _target_: mpinv.models.multi_head_mlp.MultiHeadMLP
+  cfg:
+    _target_: mpinv.models.multi_head_mlp.MultiHeadMLPConfig
+    input_dim: ???
+    output_dim: 140
+    l_max: 5
+    groups:
+    - - 1
+    - - 2
+    - - 3
+    - - 4
+    - - 5
+    hidden_size: 60
+    n_hidden_layers: 4
+    architecture: flat
+    dropout: 0.001
+    use_layer_norm: false
+    use_bias: true
+    activation: elu
+loss:
+  kind: physics
+  _target_: mpinv.cli._builders.build_physics_power_loss
+  log_ratio: false
+  log_eps: 1.0e-12
+  coef_aux_weight: 0.0
+  rank_bin_weight: 0.1
+  rank_bin_n_bins: null
+  rank_bin_beta: 10.0
+optimiser:
+  _target_: mpinv.training.optim.OptimiserConfig
+  name: adamw
+  lr: 0.001
+  weight_decay: 0.0
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  fused: false
+scheduler:
+  _target_: mpinv.training.optim.SchedulerConfig
+  name: none
+trainer:
+  _target_: mpinv.training.trainer.TrainerConfig
+  max_epochs: 1
+  accum_steps: 1
+  log_every_n_steps: 20
+  sanity_check: true
+  device: cpu
+  amp:
+    _target_: mpinv.training.amp.AMPConfig
+    precision: fp32
+callbacks:
+  log_every_n_steps: 5
+  checkpoint_every_n_epochs: 1
+  keep_last_checkpoints: 3
+  grad_clip_max_norm: 1.0
+  early_stop_patience: 10
+  validation_every_n_epochs: 1
+tracking:
+  _target_: mpinv.tracking.mlflow_sink.MLflowSinkConfig
+  tracking_uri: ''
+  experiment_name: ''
+  disabled: true
+experiment_name: final_step3_scheduling
+seed: 0
+run_name: ${now:%Y-%m-%d_%H-%M-%S}
+output_dir: ${hydra:runtime.output_dir}
+training:
+  _target_: mpinv.training.staged.StagedTrainerConfig
+  stage_max_epochs: 1
+  backbone_policy: all_trainable_active_boost
+  backbone_lr_factor: 0.1
+  reinit_active_head: true
+  zero_init_future_heads: true
+  starting_stage: 1
+  checkpoint_root: null
+  truncate_target_to_active_band: true

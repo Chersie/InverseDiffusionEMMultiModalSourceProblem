@@ -1,0 +1,2 @@
+- training.backbone_policy=trainable_always
+- training.truncate_target_to_active_band=True

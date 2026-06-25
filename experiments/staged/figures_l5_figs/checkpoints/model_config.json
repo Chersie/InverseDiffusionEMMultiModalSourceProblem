@@ -1,0 +1,30 @@
+{
+  "input_dim": 64445,
+  "output_dim": 140,
+  "l_max": 5,
+  "groups": [
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      4
+    ],
+    [
+      5
+    ]
+  ],
+  "hidden_size": 200,
+  "n_hidden_layers": 5,
+  "architecture": "flat",
+  "hidden_size_min": 64,
+  "dropout": 0.001,
+  "use_layer_norm": false,
+  "use_bias": true,
+  "activation": "elu"
+}

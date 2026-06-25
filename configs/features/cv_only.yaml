@@ -1,0 +1,21 @@
+# Composite: NO PCA, just FFT radial + SH power.
+kind: composite
+skip_pca: true
+pca:
+  input_mode: power
+  log_input: false
+  pca_components: 1
+  pca_whiten: false
+  pca_random_state: 0
+  normalise_features: true
+  normalise_targets: true
+extractors:
+  - name: fft_radial
+    n_bins: 16
+    sin_theta_window: true
+    log1p: true
+    input_mode: power
+  - name: sh_power
+    log1p: true
+    input_mode: power
+normalise_concat: true

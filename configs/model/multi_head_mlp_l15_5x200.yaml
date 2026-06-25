@@ -1,0 +1,34 @@
+# MultiHeadMLP at L=15 (full project bandlimit) with the same backbone as the
+# best L=5 run, plus 15 per-l heads. Used by the "modes 6-15 with fixed 1-5"
+# continuation: train an L=5 multi_head_mlp_5x200 first, transplant heads
+# 1..5 into this L=15 model, then run staged training over stages 6..15.
+# Output dim: 4 * 15 * (15 + 2) = 1020.
+_target_: mpinv.models.multi_head_mlp.MultiHeadMLP
+cfg:
+  _target_: mpinv.models.multi_head_mlp.MultiHeadMLPConfig
+  input_dim: ???
+  output_dim: 1020
+  l_max: 15
+  groups:
+    - [1]
+    - [2]
+    - [3]
+    - [4]
+    - [5]
+    - [6]
+    - [7]
+    - [8]
+    - [9]
+    - [10]
+    - [11]
+    - [12]
+    - [13]
+    - [14]
+    - [15]
+  hidden_size: 200
+  n_hidden_layers: 5
+  architecture: flat
+  dropout: 0.001
+  use_layer_norm: false
+  use_bias: true
+  activation: elu

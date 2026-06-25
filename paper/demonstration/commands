@@ -1,0 +1,82 @@
+#!/bin/bash
+# Commands to generate demonstration plots for the best candidates from each multirun step
+# Each command generates all plot types for the best model from that step
+
+# Common dataset path (same for all steps)
+DATASET="data/raw/real_antenna"
+OUTPUT_BASE="paper/demonstration/figures"
+
+# Step 0: Base model
+# Best checkpoint from outputs/final_step0_base
+echo "Generating plots for Step 0 (Base model)..."
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint outputs/final_step0_base/checkpoints/best.pt \
+    --dataset "$DATASET" \
+    --split holdout \
+    --output-dir "$OUTPUT_BASE/step0_base" \
+    --output-prefix "step0_"
+
+# Step 1: Combined experiments
+# Best checkpoint from: multirun/final_step1_combined/2026-06-09_07-13-13/0
+echo "Generating plots for Step 1 (Combined experiments)..."
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step1_combined/2026-06-09_07-13-13/0/checkpoints/best.pt \
+    --dataset "$DATASET" \
+    --split holdout \
+    --output-dir "$OUTPUT_BASE/step1_combined" \
+    --output-prefix "step1_"
+
+# Step 2: Features experiments  
+# Best checkpoint from: multirun/final_step2_features/2026-06-09_19-16-24/4
+echo "Generating plots for Step 2 (Features experiments)..."
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step2_features/2026-06-09_19-16-24/4/checkpoints/best.pt \
+    --dataset "$DATASET" \
+    --split holdout \
+    --output-dir "$OUTPUT_BASE/step2_features" \
+    --output-prefix "step2_"
+
+# Step 3: Scheduling experiments
+# Best checkpoint from: multirun/final_step3_scheduling/2026-06-10_00-23-36
+# Note: You may need to specify the exact subdirectory (e.g., /0, /1, etc.) for the best model
+echo "Generating plots for Step 3 (Scheduling experiments)..."
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step3_scheduling/2026-06-10_00-23-36/0/checkpoints/best.pt \
+    --dataset "$DATASET" \
+    --split holdout \
+    --output-dir "$OUTPUT_BASE/step3_scheduling" \
+    --output-prefix "step3_"
+
+echo "All plot generation commands completed!"
+echo "Check the output directories: $OUTPUT_BASE/step*"
+
+# Alternative: Generate specific plot types only
+# Uncomment below to generate only specific plot types
+
+# Step 0 - R² and bin accuracy only
+# uv run python paper/demonstration/generate_plots.py \
+#     --model-checkpoint outputs/final_step0_base/checkpoints/best.pt \
+#     --dataset "$DATASET" \
+#     --split holdout \
+#     --plot-types r2_distribution,bin_accuracy \
+#     --output-dir "$OUTPUT_BASE/step0_base_selected" \
+#     --output-prefix "step0_"
+
+# Step 1 - Field comparison only
+# uv run python paper/demonstration/generate_plots.py \
+#     --model-checkpoint multirun/final_step1_combined/2026-06-09_07-13-13/0/checkpoints/best.pt \
+#     --dataset "$DATASET" \
+#     --split holdout \
+#     --plot-types field_comparison \
+#     --n-field-samples 5 \
+#     --output-dir "$OUTPUT_BASE/step1_field_comparison" \
+#     --output-prefix "step1_"
+
+# Step 2 - Loss curves only
+# uv run python paper/demonstration/generate_plots.py \
+#     --model-checkpoint multirun/final_step2_features/2026-06-09_19-16-24/4/checkpoints/best.pt \
+#     --dataset "$DATASET" \
+#     --split holdout \
+#     --plot-types loss_curves \
+#     --output-dir "$OUTPUT_BASE/step2_loss_curves" \
+#     --output-prefix "step2_"

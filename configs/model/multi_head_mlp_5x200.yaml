@@ -1,0 +1,22 @@
+# MultiHeadMLP at L=5 with the same backbone as the current best model
+# (mlp_5x200 / 200x5 flat / ELU / no LayerNorm / dropout=0.001) and one head
+# per l-band. Output dim is fixed by L=5: 4 * 5 * (5 + 2) = 140.
+_target_: mpinv.models.multi_head_mlp.MultiHeadMLP
+cfg:
+  _target_: mpinv.models.multi_head_mlp.MultiHeadMLPConfig
+  input_dim: ???
+  output_dim: 140
+  l_max: 5
+  groups:
+    - [1]
+    - [2]
+    - [3]
+    - [4]
+    - [5]
+  hidden_size: 200
+  n_hidden_layers: 5
+  architecture: flat
+  dropout: 0.001
+  use_layer_norm: false
+  use_bias: true
+  activation: elu

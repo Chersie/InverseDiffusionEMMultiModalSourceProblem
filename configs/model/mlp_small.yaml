@@ -1,0 +1,12 @@
+_target_: mpinv.models.mlp.MLP
+cfg:
+  _target_: mpinv.models.mlp.MLPConfig
+  input_dim: ???   # filled by the CLI from features.feature_dim
+  output_dim: ???  # filled by the CLI from data.l_max
+  hidden_size: 128
+  n_hidden_layers: 3
+  architecture: flat
+  dropout: 0.0
+  use_layer_norm: false
+  use_bias: true
+  activation: silu

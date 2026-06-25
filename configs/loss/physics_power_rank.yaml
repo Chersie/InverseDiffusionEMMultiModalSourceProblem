@@ -1,0 +1,11 @@
+kind: physics
+_target_: mpinv.cli._builders.build_physics_power_loss
+log_ratio: false
+log_eps: 1e-12
+coef_aux_weight: 0.0
+# Rank-bin regulariser: scale- and shift-invariant per-pixel rank loss on
+# the predicted vs true power pattern. n_bins defaults to 2*l_max+1 when
+# null. See ``mpinv.losses.rank_bin`` for the soft-binning formulation.
+rank_bin_weight: 0.1
+rank_bin_n_bins: null
+rank_bin_beta: 10.0

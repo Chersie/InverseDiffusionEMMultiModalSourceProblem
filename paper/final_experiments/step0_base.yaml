@@ -1,0 +1,23 @@
+# @package _global_
+# Step 0 — base. Single cell, no sweep.
+# Recipe (proposal.md §"step 0. base"): 4x60, MSE on coeff, no scheduling, raw P в фичах.
+# Dataset (per chat clarification): real-augmented L=5, 200/180/100/10000.
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  - override /features: raw_flat
+  - override /loss: coef_mse
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step0_base
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+hydra:
+  run:
+    dir: outputs/final_step0_base/${now:%Y-%m-%d_%H-%M-%S}

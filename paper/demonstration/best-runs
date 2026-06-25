@@ -1,0 +1,25 @@
+
+outputs/final_step0_base/2026-06-09_07-10-39/report
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint outputs/final_step0_base/2026-06-09_07-10-39/checkpoints/best.pt \
+    --output-dir /tmp/demo_regen_step0 \
+    --splits val 2>&1
+
+
+multirun/final_step1_combined/2026-06-09_07-13-13/0/report
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step1_combined/2026-06-09_07-13-13/0/checkpoints/best.pt \
+    --output-dir /tmp/demo_regen_step1 \
+    --splits val 2>&1
+
+multirun/final_step2_features/2026-06-09_19-16-24/4/report
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step2_features/2026-06-09_19-16-24/4/checkpoints/best.pt \
+    --output-dir /tmp/demo_regen_step2 \
+    --splits val 2>&1
+
+multirun/final_step3_scheduling/2026-06-10_00-23-36/2/report
+uv run python paper/demonstration/generate_plots.py \
+    --model-checkpoint multirun/final_step3_scheduling/2026-06-10_00-23-36/2/checkpoints/stage_5/best.pt \
+    --output-dir /tmp/demo_regen_step2 \
+    --splits val --config multirun/final_step3_scheduling/2026-06-10_00-23-36/2/.hydra/config.yaml 2>&1

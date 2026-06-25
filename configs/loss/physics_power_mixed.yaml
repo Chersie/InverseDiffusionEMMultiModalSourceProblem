@@ -1,0 +1,5 @@
+kind: physics
+_target_: mpinv.cli._builders.build_physics_power_loss
+log_ratio: false
+log_eps: 1e-12
+coef_aux_weight: 0.1

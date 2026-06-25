@@ -1,0 +1,67 @@
+# @package _global_
+# Step 3 — scheduling (Матрёшка-trick). 6 cells.
+# Cartesian product of:
+#   axis A — 3 backbone-and-head policies (proposal §"Матрёшка-trick"):
+#     freeze_after_stage1     ("способ с заморозкой backbone-модели")
+#     trainable_always        ("способ с заморозкой только предыдущих голов")
+#     all_trainable_active_boost
+#       ("способ с увеличением lr на текущую голову без заморозки предыдущих и backbone")
+#   axis B — 2 target-P modes for loss-on-head-k (proposal §"loss на голове k"):
+#     truncate_target_to_active_band=false   (loss vs. full ground-truth P)
+#     truncate_target_to_active_band=true    (loss vs. P from coefficients
+#                                             up to head k inclusive)
+#
+# Model switches to multi_head_mlp_4x60 (one head per l in 1..5).
+# Loss is the winner of Step 1 (placeholder); features the winner of Step 2.
+#
+# TODO: after Steps 1 + 2 — replace `loss: physics_power_rank` (placeholder)
+# with the Step 1 winner; replace `features: raw_flat` with the Step 2 winner.
+# Step 3's loss MUST be a physics_power* family (otherwise the truncated-
+# target axis B is silently ignored — see paper/final_experiments/manifest.md
+# R5 last paragraph).
+defaults:
+  - /train
+  # `training` is a NEW group (configs/training/staged.yaml); it must be
+  # listed *before* any `override /...` entries — Hydra rejects non-override
+  # defaults that follow overrides.
+  - training: staged  # enables StagedTrainer dispatch in cli/train.py
+  - override /data: real_augmented_l5
+  - override /model: multi_head_mlp_4x60
+  # Step 1 winner: physics_power_combined with coef_aux_weight=0.01, rank_bin_weight=0.01
+  # (from final_step1_combined/2026-06-09_07-13-13/0, composite=-0.371)
+  - override /loss: physics_power_combined
+  # Step 2 winner: pca_cv (from final_step2_features/2026-06-09_19-16-24/4, composite=-0.417)
+  - override /features: pca_cv
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step3_scheduling
+seed: 0
+
+trainer:
+  max_epochs: 30  # used as inner Trainer.max_epochs; staged.stage_max_epochs is the per-stage budget
+
+# Step 1 winner hyperparameters (from final_step1_combined/2026-06-09_07-13-13/0)
+loss:
+  coef_aux_weight: 0.01
+  rank_bin_weight: 0.01
+
+# Staged-trainer base knobs; the multirun below sweeps backbone_policy and
+# truncate_target_to_active_band over their proposal-aligned values.
+training:
+  stage_max_epochs: 30
+  reinit_active_head: true
+  zero_init_future_heads: true
+  starting_stage: 1
+  backbone_lr_factor: 0.1
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step3_scheduling/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      training.backbone_policy: freeze_after_stage1,trainable_always,all_trainable_active_boost
+      training.truncate_target_to_active_band: true,false

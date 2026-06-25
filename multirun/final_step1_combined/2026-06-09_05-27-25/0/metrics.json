@@ -1,0 +1,27 @@
+{
+  "metrics": {
+    "report/val/coef_mse": 0.9629095196723938,
+    "report/val/coef_r2": -1.01067604449065,
+    "report/val/coef_mse_amb_aware": 0.9356058239936829,
+    "report/val/field_mse_w": 0.6846243666884936,
+    "report/val/field_nrmse_w": 0.11617734209478078,
+    "report/val/spearman_rho_P": 0.9656230615702288,
+    "report/val/bin_accuracy_P": 0.5442147734326505,
+    "report/test/coef_mse": 3095100.75,
+    "report/test/coef_r2": -710.528086525106,
+    "report/test/coef_mse_amb_aware": 3095100.75,
+    "report/test/field_mse_w": 2428295405909600.5,
+    "report/test/field_nrmse_w": 829.0351400565341,
+    "report/test/spearman_rho_P": 0.45525732764177923,
+    "report/test/bin_accuracy_P": 0.15957764732697083,
+    "report/holdout/coef_mse": 0.983854353427887,
+    "report/holdout/coef_r2": -1.0162190539325962,
+    "report/holdout/coef_mse_amb_aware": 0.9332388639450073,
+    "report/holdout/field_mse_w": 5.357502154017189,
+    "report/holdout/field_nrmse_w": 0.2725857903617937,
+    "report/holdout/spearman_rho_P": 0.9249255383266834,
+    "report/holdout/bin_accuracy_P": 0.5179470825574177
+  },
+  "experiment_name": "final_step1_combined",
+  "run_name": "2026-06-09_05-27-25"
+}

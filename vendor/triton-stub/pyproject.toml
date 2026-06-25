@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+# Pretend to be `triton` so torch-harmonics 0.6.5 can be imported on macOS arm64.
+# We only need the names that are referenced at module-load time inside
+# torch_harmonics._disco_convolution; the actual kernels never execute on a
+# non-CUDA platform because the code path that calls them is not reachable
+# through the SHT API we use.
+name = "triton"
+version = "0.0.0+stub"
+description = "no-op triton stub for environments without CUDA (macOS arm64). DO NOT publish."
+requires-python = ">=3.10"
+
+[tool.hatch.build.targets.wheel]
+packages = ["triton"]

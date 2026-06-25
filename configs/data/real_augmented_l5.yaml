@@ -1,0 +1,38 @@
+# Real-augmented pipeline at L=5 — production setup matching scripts/run_real_augmented.py
+# defaults (200 sources / 180 train / 20 val / 100 holdout / 10 000 augmented train).
+# Augmentation chain: field_phi_roll → coef_mode_dropout → field_additive_noise.
+# Returns the same dict shape as configs/data/synthetic_l15_baseline.yaml plus
+# optional P_test/packed_test (synthetic colored α=2 reference) and
+# P_holdout/packed_holdout (sample-id-disjoint real-antenna split for the
+# end-of-run report).
+_target_: mpinv.data.real_augmented_pipeline.build_real_augmented_pipeline
+grid:
+  n_phi: 360
+  n_theta: 179
+  theta_start_deg: 1.0
+  theta_end_deg: 179.0
+l_max: 5
+holdout_root: data/raw/real_antenna
+feature_subdir: E_in_plane
+n_source: 200
+n_train_sources: 180
+n_augmented: 10000
+n_holdout_samples: 100
+shuffle_seed: 42
+holdout_shuffle_seed: 314159
+aug_seed: 4242
+dropout_prob: 0.1
+field_sigma: 1.0e-8
+scale_factor: 1.0e+6
+aug_chunk_size: 500
+include_synthetic_test: true
+n_synthetic_test: 512
+seed_synthetic_test: 9012
+# Dummy split: 4 K = 4 * l_max * (l_max + 2) samples, each a one-hot in packed
+# space. dummy_amplitude is in post-scale_factor units; default 1.0 matches the
+# typical magnitude of real-augmented packed coefficients after scale_factor=1e6.
+include_dummy_probe: true
+dummy_amplitude: 1.0
+smoke_test: false
+batch_size: 64
+num_workers: 0

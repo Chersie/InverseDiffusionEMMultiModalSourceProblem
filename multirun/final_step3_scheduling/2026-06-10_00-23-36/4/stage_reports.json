@@ -1,0 +1,112 @@
+[
+  {
+    "stage_idx": 1,
+    "active_head_idx": 0,
+    "group": [
+      1
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": false,
+      "head_2": false,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 20,
+    "last_eval_metrics": {
+      "val/loss": 0.4793894588947296,
+      "val/coef_mse": 0.6849628686904907
+    },
+    "stop_requested": true,
+    "n_trainable_params": 17472
+  },
+  {
+    "stage_idx": 2,
+    "active_head_idx": 1,
+    "group": [
+      2
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": false,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 30,
+    "last_eval_metrics": {
+      "val/loss": 1.0292916297912598,
+      "val/coef_mse": 0.8811794519424438
+    },
+    "stop_requested": false,
+    "n_trainable_params": 18692
+  },
+  {
+    "stage_idx": 3,
+    "active_head_idx": 2,
+    "group": [
+      3
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 30,
+    "last_eval_metrics": {
+      "val/loss": 1.4488669633865356,
+      "val/coef_mse": 0.9510344862937927
+    },
+    "stop_requested": false,
+    "n_trainable_params": 20400
+  },
+  {
+    "stage_idx": 4,
+    "active_head_idx": 3,
+    "group": [
+      4
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": true,
+      "head_4": false
+    },
+    "epochs_run": 30,
+    "last_eval_metrics": {
+      "val/loss": 0.9540652632713318,
+      "val/coef_mse": 0.9749760031700134
+    },
+    "stop_requested": false,
+    "n_trainable_params": 22596
+  },
+  {
+    "stage_idx": 5,
+    "active_head_idx": 4,
+    "group": [
+      5
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": true,
+      "head_4": true
+    },
+    "epochs_run": 30,
+    "last_eval_metrics": {
+      "val/loss": 0.620009183883667,
+      "val/coef_mse": 0.9771162867546082
+    },
+    "stop_requested": false,
+    "n_trainable_params": 25280
+  }
+]

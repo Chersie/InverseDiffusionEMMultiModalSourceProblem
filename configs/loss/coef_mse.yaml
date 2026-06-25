@@ -1,0 +1,5 @@
+kind: coef
+_target_: mpinv.losses.coef_mse.CoefMSE
+cfg:
+  _target_: mpinv.losses.coef_mse.CoefMSEConfig
+  reduction: mean

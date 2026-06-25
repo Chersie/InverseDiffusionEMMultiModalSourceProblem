@@ -1,0 +1,28 @@
+# @package _global_
+# Step 1 — regularization, sub-sweep "physics_power + coef_aux". 5 cells.
+# physics_power_mixed.yaml uses log_ratio=false, rank_bin_weight=0; we sweep
+# coef_aux_weight ∈ {0.001, 0.01, 0.1, 1.0, 10.0}.
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  - override /features: raw_flat
+  - override /loss: physics_power_mixed
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step1_mixed
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step1_mixed/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      loss.coef_aux_weight: 0.001,0.01,0.1,1.0,10.0

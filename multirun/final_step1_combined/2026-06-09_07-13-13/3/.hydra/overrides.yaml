@@ -1,0 +1,2 @@
+- loss.coef_aux_weight=0.1
+- loss.rank_bin_weight=0.01

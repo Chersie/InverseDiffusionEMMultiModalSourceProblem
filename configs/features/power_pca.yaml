@@ -1,0 +1,10 @@
+_target_: mpinv.features.power_pipeline.PowerPCAPipeline
+cfg:
+  _target_: mpinv.features.power_pipeline.PowerPCAPipelineConfig
+  input_mode: power
+  log_input: false
+  pca_components: 128
+  pca_whiten: false
+  pca_random_state: 0
+  normalise_features: true
+  normalise_targets: true

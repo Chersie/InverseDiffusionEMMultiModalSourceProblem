@@ -1,0 +1,67 @@
+# @package _global_
+# Optuna sweep over the MLP hyperparameters.
+# Run with: `uv run mpinv-sweep --config-name=sweep/optuna_mlp`
+# (R2b: we do not use the unmaintained hydra-optuna-sweeper plugin; sweep runs via
+#  Optuna 4.x directly — see src/mpinv/cli/sweep.py.)
+defaults:
+  - /data: synthetic_l4_tiny
+  - /features: power_pca_small
+  - /model: mlp_small
+  - /loss: coef_mse
+  - /optimiser: adamw
+  - /scheduler: none
+  - /trainer: fast_dev_run
+  - /callbacks: default
+  - /tracking: mlflow_local
+  - _self_
+
+experiment_name: mpinv-mlp-sweep
+seed: 0
+run_name: ${now:%Y-%m-%d_%H-%M-%S}
+output_dir: ${hydra:runtime.output_dir}
+
+sweep:
+  study_name: mpinv-mlp-sweep
+  direction: minimize
+  metric: val/loss
+  n_trials: 8
+  n_jobs: 1
+  sampler: tpe          # tpe | random | cmaes
+  pruner: median        # median | nop | hyperband
+  seed: 0
+  storage: null         # null = in-memory; or "sqlite:///optuna.db"
+  load_if_exists: true
+  search_space:
+    model.cfg.hidden_size:
+      type: categorical
+      choices: [64, 128, 256, 512]
+    model.cfg.n_hidden_layers:
+      type: int
+      low: 2
+      high: 6
+    model.cfg.dropout:
+      type: float
+      low: 0.0
+      high: 0.3
+    optimiser.lr:
+      type: float
+      low: 1.0e-4
+      high: 1.0e-2
+      log: true
+    optimiser.weight_decay:
+      type: float
+      low: 1.0e-6
+      high: 1.0e-2
+      log: true
+
+# trim training for sweep trials so each one finishes quickly
+trainer:
+  _target_: mpinv.training.trainer.TrainerConfig
+  max_epochs: 5
+  accum_steps: 1
+  log_every_n_steps: 50
+  sanity_check: true
+  device: cpu
+  amp:
+    _target_: mpinv.training.amp.AMPConfig
+    precision: fp32

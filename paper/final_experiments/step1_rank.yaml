@@ -1,0 +1,30 @@
+# @package _global_
+# Step 1 — regularization, sub-sweep "physics_power + rank_bin". 5 cells.
+# physics_power_rank.yaml uses log_ratio=false, coef_aux_weight=0; we sweep
+# rank_bin_weight ∈ {0.001, 0.01, 0.1, 1.0, 10.0}.
+# proposal.md flags this as "ОЧЕНЬ ВАЖНЫЙ ПУНКТ": without rank-bin term the
+# model does not converge on real-augmented data.
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  - override /features: raw_flat
+  - override /loss: physics_power_rank
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step1_rank
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step1_rank/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      loss.rank_bin_weight: 0.001,0.01,0.1,1.0,10.0

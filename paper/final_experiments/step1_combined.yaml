@@ -1,0 +1,28 @@
+# @package _global_
+# Step 1 — regularization, sub-sweep "physics_power + coef_aux + rank_bin". 9 cells.
+# Cartesian product of {0.01, 0.1, 1.0} × {0.01, 0.1, 1.0}.
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  - override /features: raw_flat
+  - override /loss: physics_power_combined
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step1_combined
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step1_combined/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      loss.coef_aux_weight: 0.01,0.1,1.0
+      loss.rank_bin_weight: 0.01,0.1,1.0

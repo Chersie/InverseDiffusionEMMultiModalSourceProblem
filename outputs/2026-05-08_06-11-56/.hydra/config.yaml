@@ -1,0 +1,92 @@
+data:
+  _target_: mpinv.cli._builders.build_data_pipeline
+  grid:
+    n_phi: 24
+    n_theta: 12
+    theta_start_deg: 7.5
+    theta_end_deg: 172.5
+  l_max: 4
+  n_train: 256
+  n_val: 64
+  seed_train: 1234
+  seed_val: 5678
+  generator:
+    mode: gaussian
+    family_balance: 0.5
+    coef_scale: 1.0
+    mode_dropout_prob: 0.0
+  batch_size: 32
+  num_workers: 0
+features:
+  kind: composite
+  skip_pca: true
+  pca:
+    input_mode: power
+    log_input: false
+    pca_components: 1
+    pca_whiten: false
+    pca_random_state: 0
+    normalise_features: true
+    normalise_targets: true
+  extractors:
+  - name: fft_radial
+    n_bins: 16
+    sin_theta_window: true
+    log1p: true
+    input_mode: power
+  - name: sh_power
+    log1p: true
+    input_mode: power
+  normalise_concat: true
+model:
+  _target_: mpinv.models.linear_baselines.LinearBaseline
+  cfg:
+    _target_: mpinv.models.linear_baselines.LinearBaselineConfig
+    input_dim: ???
+    output_dim: ???
+    use_bias: true
+loss:
+  kind: coef
+  _target_: mpinv.losses.coef_mse.CoefMSE
+  cfg:
+    _target_: mpinv.losses.coef_mse.CoefMSEConfig
+    reduction: mean
+optimiser:
+  _target_: mpinv.training.optim.OptimiserConfig
+  name: adamw
+  lr: 0.001
+  weight_decay: 0.0001
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  fused: false
+scheduler:
+  _target_: mpinv.training.optim.SchedulerConfig
+  name: none
+trainer:
+  _target_: mpinv.training.trainer.TrainerConfig
+  max_epochs: 1
+  accum_steps: 1
+  log_every_n_steps: 5
+  sanity_check: true
+  device: cpu
+  amp:
+    _target_: mpinv.training.amp.AMPConfig
+    precision: fp32
+callbacks:
+  log_every_n_steps: 5
+  checkpoint_every_n_epochs: 1
+  keep_last_checkpoints: 3
+  grad_clip_max_norm: 1.0
+  early_stop_patience: 10
+  validation_every_n_epochs: 1
+tracking:
+  _target_: mpinv.tracking.mlflow_sink.MLflowSinkConfig
+  tracking_uri: ''
+  experiment_name: ''
+  disabled: true
+experiment_name: mpinv-vertical-slice
+seed: 0
+run_name: ${now:%Y-%m-%d_%H-%M-%S}
+output_dir: ${hydra:runtime.output_dir}

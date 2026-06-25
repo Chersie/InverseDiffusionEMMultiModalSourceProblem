@@ -1,0 +1,20 @@
+# Composite: skip PCA, raw flatten + SH power per-l spectrum.
+kind: composite
+skip_pca: true
+pca:
+  input_mode: power
+  log_input: false
+  pca_components: 1
+  pca_whiten: false
+  pca_random_state: 0
+  normalise_features: true
+  normalise_targets: true
+extractors:
+  - name: raw_flat
+    input_mode: power
+    log_input: false
+    normalise_features: true
+  - name: sh_power
+    log1p: true
+    input_mode: power
+normalise_concat: true

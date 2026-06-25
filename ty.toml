@@ -1,0 +1,9 @@
+[environment]
+python-version = "3.12"
+
+[src]
+include = ["src", "tests"]
+
+[rules]
+possibly-unresolved-reference = "ignore"
+possibly-missing-attribute = "ignore"

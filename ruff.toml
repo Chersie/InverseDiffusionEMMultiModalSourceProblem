@@ -1,0 +1,49 @@
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "RUF",  # ruff-specific
+    "N",    # pep8-naming
+    "ARG",  # unused arguments
+    "PTH",  # use pathlib
+    "PT",   # pytest style
+    "TID",  # tidy imports
+]
+ignore = [
+    "E501",   # line length (formatter handles this)
+    "E741",   # ambiguous name `l` — we use `l` for the multipole order by physics convention
+    "N803",   # camelCase function args (we have a, b, P, etc. by domain convention)
+    "N806",   # camelCase variables (same)
+    "B008",   # function call in default arg (Hydra/dataclass field defaults are fine)
+    "G002",   # logging %-style formatting (intentional, deferred f-string expansion)
+    "G004",   # f-string in logger
+    "N802",   # uppercase test names
+    "ARG002", # unused method argument (callback no-op default hooks have unused args by design)
+    "SIM105", # try-except-pass — fine for "best effort" sink calls
+    "C416",   # list comprehension -> list(); minor style
+    "PTH123", # open() -> Path.open(); minor style
+    "N801",   # uppercase class name (we deliberately use lowercase `dtype` etc. in the triton stub)
+    "RUF059", # unused unpacked variable in tests
+]
+
+[lint.per-file-ignores]
+"tests/**/*.py" = ["ARG", "PT011", "N802", "RUF059", "F841", "B007", "E402"]
+"src/mpinv/cli/**/*.py" = ["B008"]
+"vendor/**/*.py" = ["ALL"]
+
+[lint.isort]
+known-first-party = ["mpinv"]
+
+[format]
+quote-style = "double"
+indent-style = "space"

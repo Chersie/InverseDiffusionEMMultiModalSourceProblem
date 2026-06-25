@@ -1,0 +1,13 @@
+- data.smoke_test=true
+- data.n_source=20
+- data.n_train_sources=15
+- data.n_augmented=64
+- data.n_holdout_samples=0
+- data.include_synthetic_test=false
+- data.scale_factor=1.0
+- trainer.max_epochs=1
+- trainer.sanity_check=true
+- training.stage_max_epochs=1
+- training.backbone_policy=all_trainable_active_boost
+- training.truncate_target_to_active_band=true
+- tracking=mlflow_off

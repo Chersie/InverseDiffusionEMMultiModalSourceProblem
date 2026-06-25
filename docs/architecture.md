@@ -1,113 +1,74 @@
-# Project Architecture
+# Architecture
 
-## Overview
-
-This project implements a modern ML pipeline for electromagnetic multipole analysis with clean separation of concerns, high performance, and comprehensive testing.
-
-## Directory Structure
+`mpinv` is a single-package Python framework for the phaseless multipole-coefficient inversion problem formalised in [presentation/ch1_full.md](../presentation/ch1_full.md). The codebase is laid out as a small set of layers with strict, well-typed boundaries:
 
 ```
-src/                           # Core implementation
-├── core/                     # Foundational components
-│   ├── config.py            # Unified configuration system
-│   ├── dependencies.py      # Dependency management
-│   ├── data_generator.py    # Unified data generation
-│   ├── library_manager.py   # High-performance library loading
-│   └── mpfield.py          # Multipole field computation
-├── pipeline/               # Scientific pipeline
-│   └── decomposition.py   # Optimized decomposition engine
-├── models/                # ML model implementations
-│   ├── base.py           # Abstract base model
-│   ├── mlp.py           # MLP implementation
-│   ├── baseline.py      # Ridge/linear baselines
-│   └── registry.py      # Model factory system
-├── api/                 # Inference and serving
-│   ├── preprocessing.py # Data preprocessing pipeline
-│   └── inference.py    # Model inference API
-└── cli/               # Command-line interfaces
-    └── ...           # Modern CLI implementations
-
-tests/                # Comprehensive test suite
-├── unit/           # Unit tests for components
-├── integration/   # Integration tests
-└── fixtures/     # Test data and utilities
-
-data/              # Data management
-├── raw/          # Raw input data
-├── processed/   # Processed data
-└── ml/         # ML datasets and features
-
-models/           # Model artifacts and tracking
-├── artifacts/   # Trained model checkpoints
-└── tracking/   # Experiment metadata
-
-Chersie/         # Library data (preserved)
-├── Fields0.5/      # Slow library data
-└── FieldsFast0.5/  # Fast library data
-
-docs/           # Documentation
+core/        tensor-shape contracts, packing, grid, area weights, seeds, types
+data/        synthetic generator, real-antenna loader, memmap dataset, basis cache
+features/    PCA, FFT-radial, HOG, SH-power, normalisers, composite pipeline
+models/      registry, base, MLP variants, linear baselines
+losses/      registry, coefficient MSE, physics power loss, differentiable VSH decoder
+training/    Trainer, optimiser builder, AMP, sanity checks
+callbacks/   logging, validation, checkpoint, early-stopping, grad-clip, memory watchdog
+tracking/    MLflow sink, dataset logger, params helper
+analysis/    plot modules, run report, metrics
+cli/         train, evaluate, sweep, generate_data, validate_physics, report
 ```
 
-## Core Components
+## End-to-end flow
 
-### 1. Configuration System (`src/core/config.py`)
-- **Unified hierarchical configuration** with environment variable support
-- **Type-safe configuration classes** using dataclasses
-- **Specialized configs** for different components (ML, Pipeline, etc.)
+```mermaid
+flowchart LR
+  subgraph Hydra[Hydra structured configs]
+    YAML[configs/*.yaml] --> CLI[cli/train.py]
+  end
+  CLI --> Data
+  CLI --> Features
+  CLI --> Models
+  CLI --> Loss
+  CLI --> Trainer
+  Data[data/] -- (P, packed) --> Features
+  Features -- features (B,F) --> Models
+  Models -- (B, 4K) --> Loss[losses/]
+  Loss --> Trainer[training/Trainer]
+  Trainer --> Callbacks[callbacks/]
+  Trainer --> Tracking[tracking/MLflow sink]
+  Trainer --> Analysis[analysis/run_report]
+```
 
-### 2. Library Manager (`src/core/library_manager.py`)  
-- **High-performance batch loading** (replaces 510+ individual file reads)
-- **Memory-mapped caching** for fast repeated access
-- **Thread-safe operation** with automatic loading
+## Hard invariants
 
-### 3. Data Generator (`src/core/data_generator.py`)
-- **Unified Latin-square generation** (replaces inconsistent implementations)
-- **Supports both fixed (pipeline) and random (ML) modes**
-- **Consistent field computation** with validation
+- **Single canonical layout** for the angular grid: `(B, n_theta, n_phi)`. The numpy-side synthetic generator computes in `(B, 2 family, 2 component, n_theta, n_phi)` and the differentiable decoder consumes the same tensor as a buffer.
+- **Phase units are radians** inside the package; the only conversion happens once in [src/mpinv/data/real_antenna_loader.py](../src/mpinv/data/real_antenna_loader.py).
+- **Single source of truth** for every registry: see [src/mpinv/models/registry.py](../src/mpinv/models/registry.py), [src/mpinv/losses/registry.py](../src/mpinv/losses/registry.py), [src/mpinv/features/registry.py](../src/mpinv/features/registry.py). Importing duplicates is a bug.
+- **No silent reshape** inside losses or feature pipelines. Shape assertions raise; we never bilinearly resize a target to match a prediction.
+- **No PyTorch Lightning**. Custom callback-driven [Trainer](../src/mpinv/training/trainer.py) per the practice.pdf rationale.
+- **No `mlflow.pytorch.autolog`**. Explicit logging only.
 
-### 4. Model Registry (`src/models/registry.py`)
-- **Factory pattern** for model creation
-- **Pluggable architectures** with consistent interfaces
-- **Automatic model discovery** and registration
+## Forward operator (production path)
 
-### 5. Inference API (`src/api/inference.py`)
-- **Production-ready serving** with batch processing
-- **Preprocessing pipeline** integration
-- **Memory-efficient operation** with validation
+Synthesis goes through a precomputed VSH basis tensor of shape `(K, 2, 2, n_theta, n_phi)` (K modes × 2 families × 2 components × angular grid). The basis is computed once with NumPy/SciPy at the project's 1° pole-excluded grid and cached at `data/cache/`. The differentiable decoder ([src/mpinv/losses/differentiable_field.py](../src/mpinv/losses/differentiable_field.py)) holds the basis as buffers and runs `einsum` to compute the complex tangential field, from which it returns the real power pattern `P = |E_theta|^2 + |E_phi|^2`.
 
-## Key Improvements
+We deliberately do **not** use `torch_harmonics.InverseRealVectorSHT` for the production forward, because:
+1. it returns a real-valued tangential field — but we need a complex field whose modulus squared yields P;
+2. the legacy `(l, m)` indexing on top of it had documented bugs (see [research/framework-rebuild/manifest.md](../research/framework-rebuild/manifest.md) R1);
+3. its `equiangular` grid includes the poles, while the project's grid excludes them.
 
-### Performance Optimizations
-- **510x reduction** in library file reads (batch loading vs per-mode)
-- **Memory-mapped data access** for large libraries
-- **Batched inference processing** with configurable batch sizes
-- **Efficient preprocessing pipelines** with caching
+`torch-harmonics` is still pinned as a dev/test dependency for cross-checks.
 
-### Code Quality  
-- **Comprehensive type hints** throughout codebase
-- **100+ unit tests** covering all major components
-- **Consistent error handling** with informative messages
-- **Modular design** with clear separation of concerns
+## Configuration
 
-### Usability
-- **Simple factory functions** for common use cases
-- **Environment variable configuration** for deployment
-- **Comprehensive logging** with configurable levels
-- **Clear migration path** from legacy code
+[Hydra 1.3 with structured configs](https://hydra.cc/docs/intro/). Top-level `configs/train.yaml` composes `data`, `features`, `model`, `loss`, `optimiser`, `scheduler`, `trainer`, `callbacks`, `tracking` via the `defaults:` list. CLI overrides land directly on these groups, e.g.
 
-## Design Principles
+```bash
+uv run mpinv-train model=mlp_pyramid loss=physics_power trainer.max_epochs=200
+```
 
-### 1. Configuration-Driven Design
-All components accept configuration objects with sensible defaults and environment variable overrides.
+Object construction uses `hydra.utils.instantiate(cfg.x)` only at leaves. Composition between leaves is plain Python.
 
-### 2. Dependency Injection  
-Components accept their dependencies as constructor arguments, enabling easy testing and flexibility.
+## Tracking & reproducibility
 
-### 3. Fail-Fast Validation
-Input validation occurs early with clear error messages to catch issues immediately.
-
-### 4. Performance by Default
-Efficient implementations are the default, with options for further optimization.
-
-### 5. Backwards Compatibility
-Legacy interfaces are preserved during transition while new APIs provide enhanced functionality.
+- MLflow 3.x — see [docs/mlflow_runbook.md](mlflow_runbook.md).
+- `uv` for environment management; `uv.lock` is checked in.
+- `ruff` for lint+format, `ty` for typing, `pre-commit` for the pre-commit hooks.
+- Random seeds set globally via [`mpinv.core.seeds.set_global_seed`](../src/mpinv/core/seeds.py).

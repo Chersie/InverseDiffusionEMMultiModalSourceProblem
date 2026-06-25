@@ -1,0 +1,14 @@
+# Knobs for the cli/train.py end-of-run report. Used by the per-split
+# loop in src/mpinv/cli/train.py.
+#
+#   n_train_eval_samples: cap on the augmented train subsample used for
+#     reporting. The full augmented train set (default 10 000) is too large
+#     to forward + plot per cell; 1024 matches the S5 production setup
+#     (final_exps_13_05.txt).
+#   n_grid_samples: rows in field_comparison_grid.pdf, ranked worst→best
+#     by per-sample sin-θ-weighted R². 8 matches S5 default.
+#   eval_batch_size: chunk size for the chunked predict pass (avoids OOM
+#     on 64440-dim raw features × 1024 samples).
+n_train_eval_samples: 1024
+n_grid_samples: 8
+eval_batch_size: 256

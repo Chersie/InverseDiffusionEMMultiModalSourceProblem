@@ -1,0 +1,3 @@
+- tracking=mlflow_off
+- trainer.max_epochs=1
+- +data.n_test=64

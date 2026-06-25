@@ -1,0 +1,10 @@
+- data=synthetic_l15_baseline
+- model=mlp_2x64
+- loss=coef_mse
+- features=power_pca
+- trainer.max_epochs=10
+- data.n_train=2048
+- data.n_val=512
+- data.n_test=512
+- tracking=mlflow_off
+- seed=0

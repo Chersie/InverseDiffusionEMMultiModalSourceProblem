@@ -1,0 +1,28 @@
+# @package _global_
+# Step 1 — regularization, sub-sweep "pure". 2 cells.
+# coef_mse pure (same as Step 0 — repeat for normalisation) and
+# physics_power pure (both auxiliary weights = 0).
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  - override /features: raw_flat
+  - override /loss: coef_mse  # base; the multirun sweeps this group
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step1_pure
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step1_pure/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      loss: coef_mse,physics_power

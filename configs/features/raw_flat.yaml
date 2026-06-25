@@ -1,0 +1,6 @@
+_target_: mpinv.features.raw_flat.RawFlattenPipeline
+cfg:
+  _target_: mpinv.features.raw_flat.RawFlattenPipelineConfig
+  input_mode: power
+  log_input: false
+  normalise_features: true

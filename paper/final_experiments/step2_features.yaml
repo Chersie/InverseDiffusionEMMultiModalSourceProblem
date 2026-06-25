@@ -1,0 +1,40 @@
+# @package _global_
+# Step 2 — feature sweep. 7 cells.
+# Holds {model, scheduler, trainer} fixed at the Step 0 base; loss is the
+# winner of Step 1 (replace the placeholder below after running Step 1 and
+# scripts/select_best_step.py).
+#
+# TODO: after Step 1 — replace `loss: physics_power_rank` (placeholder) with
+# the winner. If the winner has non-default knobs (e.g.
+# `loss.coef_aux_weight=1.0`), set them under the `loss:` key here.
+defaults:
+  - /train
+  - override /data: real_augmented_l5
+  - override /model: mlp_4x60
+  # Step 1 winner: physics_power_combined with coef_aux_weight=0.01, rank_bin_weight=0.01
+  # (from final_step1_combined/2026-06-09_07-13-13/0, composite=-0.371)
+  - override /loss: physics_power_combined
+  - override /features: raw_flat  # base; the multirun sweeps this group
+  - override /scheduler: none
+  - override /trainer: default
+  - _self_
+
+experiment_name: final_step2_features
+seed: 0
+
+trainer:
+  max_epochs: 30
+
+# Step 1 winner hyperparameters (from final_step1_combined/2026-06-09_07-13-13/0)
+loss:
+  coef_aux_weight: 0.01
+  rank_bin_weight: 0.01
+
+hydra:
+  mode: MULTIRUN
+  sweep:
+    dir: multirun/final_step2_features/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}
+  sweeper:
+    params:
+      features: raw_flat,raw_plus_sh,power_pca,power_pca_small,pca_cv,cv_only,subsample_stride4

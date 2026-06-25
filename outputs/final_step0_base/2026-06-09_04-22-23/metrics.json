@@ -1,0 +1,13 @@
+{
+  "metrics": {
+    "report/val/coef_mse": 0.08761798590421677,
+    "report/val/coef_r2": -20.177494885246094,
+    "report/val/coef_mse_amb_aware": 0.08761798590421677,
+    "report/val/field_mse_w": 1.993601581489582,
+    "report/val/field_nrmse_w": 24.62464656922632,
+    "report/val/spearman_rho_P": -0.048910379524869985,
+    "report/val/bin_accuracy_P": 0.0800869025450031
+  },
+  "experiment_name": "final_step0_base",
+  "run_name": "2026-06-09_04-22-23"
+}

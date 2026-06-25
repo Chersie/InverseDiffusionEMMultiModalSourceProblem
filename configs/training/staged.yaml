@@ -1,0 +1,39 @@
+# StagedTrainer config: backbone policy, per-stage epoch budget, and the
+# zero/reinit knobs that drive the user's staged-per-l-band training.
+#
+# Composes with configs/trainer/* (which set the per-stage Trainer.cfg knobs:
+# device, AMP, accum_steps, log_every_n_steps).
+_target_: mpinv.training.staged.StagedTrainerConfig
+stage_max_epochs: 30
+# Backbone policy across stages:
+#   trainable_always              — backbone updates in every stage at the head LR.
+#   freeze_after_stage1           — backbone trains only in stage 1 (default; stable).
+#   lower_lr_after_stage1         — backbone keeps training at backbone_lr_factor*lr.
+#   all_trainable_active_boost    — proposal-axis-A "способ с увеличением lr на
+#                                   текущую голову без заморозки предыдущих и
+#                                   backbone": every head and the backbone train,
+#                                   but the active head runs at full lr while
+#                                   everything else runs at backbone_lr_factor*lr.
+backbone_policy: freeze_after_stage1
+backbone_lr_factor: 0.1
+# Re-initialise the active head to PyTorch's default Linear distribution at
+# every stage boundary (the user's "non-zero weights for faster convergence"
+# path). The previous content of this head is discarded — set to false only
+# for the explicit "frozen-random heads from initialisation" ablation.
+reinit_active_head: true
+# Force every head with index > active to weight=bias=0 at the start of each
+# stage. Together with set_head_trainable(False) this guarantees those heads
+# emit identically zero into the packed output, so the physics decoder sees
+# only the active band + already-trained earlier bands.
+zero_init_future_heads: true
+# 1-indexed first stage. Use starting_stage=6 with --transplant-from to run
+# the "modes 6-15 with fixed 1-5 predictions" continuation.
+starting_stage: 1
+checkpoint_root: null
+# proposal-axis-B "loss на голове k можем считать по P, полученному по
+# коэффициентам до головы k включительно": when true, set the loss's
+# `cfg.truncate_target_to_band` to `max(group)` of the active head at the
+# start of every stage, so the field-space term is supervised against P
+# synthesised only from bands 1..max(group). Requires the loss to expose
+# such a knob (PhysicsPowerLoss does; CoefMSE silently skips).
+truncate_target_to_active_band: false

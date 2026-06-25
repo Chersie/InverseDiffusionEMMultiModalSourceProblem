@@ -1,6 +1,0 @@
-default_experiment: inverse_mie_pipeline
-experiments:
-  - name: inverse_mie_pipeline
-    description: Legacy-pipeline run tracking with key artifacts and params.
-  - name: synthetic_pipeline_test
-    description: Synthetic field generation and decomposition validation runs.

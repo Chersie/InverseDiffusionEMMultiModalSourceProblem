@@ -1,0 +1,5 @@
+_target_: mpinv.training.optim.SchedulerConfig
+name: cosine_with_warmup
+total_steps: 4000
+warmup_steps: 200
+min_lr: 1.0e-6

@@ -1,0 +1,112 @@
+[
+  {
+    "stage_idx": 1,
+    "active_head_idx": 0,
+    "group": [
+      1
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": false,
+      "head_2": false,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 1,
+    "last_eval_metrics": {
+      "val/loss": 1.6252626180648804,
+      "val/coef_mse": 0.03593762218952179
+    },
+    "stop_requested": false,
+    "n_trainable_params": 3878172
+  },
+  {
+    "stage_idx": 2,
+    "active_head_idx": 1,
+    "group": [
+      2
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": false,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 1,
+    "last_eval_metrics": {
+      "val/loss": 2.413813829421997,
+      "val/coef_mse": 0.06019102409482002
+    },
+    "stop_requested": false,
+    "n_trainable_params": 3879392
+  },
+  {
+    "stage_idx": 3,
+    "active_head_idx": 2,
+    "group": [
+      3
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": false,
+      "head_4": false
+    },
+    "epochs_run": 1,
+    "last_eval_metrics": {
+      "val/loss": 3.778157949447632,
+      "val/coef_mse": 0.09613852202892303
+    },
+    "stop_requested": false,
+    "n_trainable_params": 3881100
+  },
+  {
+    "stage_idx": 4,
+    "active_head_idx": 3,
+    "group": [
+      4
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": true,
+      "head_4": false
+    },
+    "epochs_run": 1,
+    "last_eval_metrics": {
+      "val/loss": 5.79768180847168,
+      "val/coef_mse": 0.1363176703453064
+    },
+    "stop_requested": false,
+    "n_trainable_params": 3883296
+  },
+  {
+    "stage_idx": 5,
+    "active_head_idx": 4,
+    "group": [
+      5
+    ],
+    "trainable_summary": {
+      "backbone": true,
+      "head_0": true,
+      "head_1": true,
+      "head_2": true,
+      "head_3": true,
+      "head_4": true
+    },
+    "epochs_run": 1,
+    "last_eval_metrics": {
+      "val/loss": 7.580385208129883,
+      "val/coef_mse": 0.16765254735946655
+    },
+    "stop_requested": false,
+    "n_trainable_params": 3885980
+  }
+]

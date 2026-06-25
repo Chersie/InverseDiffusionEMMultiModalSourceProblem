@@ -1,0 +1,10 @@
+_target_: mpinv.features.subsample.SubsampleGridPipeline
+cfg:
+  _target_: mpinv.features.subsample.SubsampleGridPipelineConfig
+  input_mode: power
+  log_input: false
+  theta_stride: 4
+  phi_stride: 4
+  random_fraction: null
+  mask_seed: 0
+  normalise_features: true

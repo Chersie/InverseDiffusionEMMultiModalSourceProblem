@@ -1,0 +1,2 @@
+- training.backbone_policy=freeze_after_stage1
+- training.truncate_target_to_active_band=False

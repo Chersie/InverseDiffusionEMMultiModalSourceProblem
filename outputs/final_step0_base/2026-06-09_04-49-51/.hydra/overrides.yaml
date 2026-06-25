@@ -1,0 +1,9 @@
+- data.smoke_test=true
+- data.n_source=20
+- data.n_train_sources=15
+- data.n_augmented=64
+- data.n_holdout_samples=0
+- data.include_synthetic_test=false
+- data.scale_factor=1.0
+- trainer.max_epochs=1
+- tracking=mlflow_off

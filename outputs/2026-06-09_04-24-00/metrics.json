@@ -1,0 +1,13 @@
+{
+  "metrics": {
+    "report/val/coef_mse": 0.038317255675792694,
+    "report/val/coef_r2": -8.261380471502433,
+    "report/val/coef_mse_amb_aware": 0.038317255675792694,
+    "report/val/field_mse_w": 0.1997109047284532,
+    "report/val/field_nrmse_w": 7.793844034444006,
+    "report/val/spearman_rho_P": 0.008345098910155968,
+    "report/val/bin_accuracy_P": 0.0909373060211049
+  },
+  "experiment_name": "final_step3_scheduling",
+  "run_name": "2026-06-09_04-24-00"
+}

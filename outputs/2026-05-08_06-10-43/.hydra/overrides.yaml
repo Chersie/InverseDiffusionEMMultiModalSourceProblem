@@ -1,0 +1,8 @@
+- data=synthetic_l4_tiny
+- trainer.max_epochs=1
+- tracking=mlflow_off
+- experiment_name=mpinv-baseline-S1
+- model=linear
+- loss=coef_mse
+- features=power_pca_small
+- seed=0

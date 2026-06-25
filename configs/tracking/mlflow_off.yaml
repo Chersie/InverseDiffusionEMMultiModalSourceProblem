@@ -1,0 +1,4 @@
+_target_: mpinv.tracking.mlflow_sink.MLflowSinkConfig
+tracking_uri: ""
+experiment_name: ""
+disabled: true

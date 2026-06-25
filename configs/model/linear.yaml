@@ -1,0 +1,6 @@
+_target_: mpinv.models.linear_baselines.LinearBaseline
+cfg:
+  _target_: mpinv.models.linear_baselines.LinearBaselineConfig
+  input_dim: ???
+  output_dim: ???
+  use_bias: true

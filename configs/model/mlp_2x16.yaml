@@ -1,0 +1,12 @@
+_target_: mpinv.models.mlp.MLP
+cfg:
+  _target_: mpinv.models.mlp.MLPConfig
+  input_dim: ???
+  output_dim: ???
+  hidden_size: 16
+  n_hidden_layers: 2
+  architecture: flat
+  dropout: 0.0
+  use_layer_norm: false
+  use_bias: true
+  activation: silu

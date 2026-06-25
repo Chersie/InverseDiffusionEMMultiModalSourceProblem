@@ -1,0 +1,4 @@
+- tracking=mlflow_off
+- trainer.max_epochs=1
+- model=linear
+- features=subsample_stride4

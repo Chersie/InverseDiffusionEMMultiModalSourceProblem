@@ -1,0 +1,32 @@
+# Top-level training config. Compositional defaults; override anything from CLI.
+# See docs/config_cookbook.md for recipes.
+defaults:
+  - data: synthetic_l4_tiny
+  - features: power_pca_small
+  - model: mlp_small
+  - loss: coef_mse
+  - optimiser: adamw
+  - scheduler: none
+  - trainer: fast_dev_run
+  - callbacks: default
+  - tracking: mlflow_local
+  - report: default
+  - _self_
+
+experiment_name: mpinv-vertical-slice
+seed: 0
+
+# resolved at runtime by Hydra's `now` resolver
+run_name: ${now:%Y-%m-%d_%H-%M-%S}
+
+# dummy paths; override per-experiment
+output_dir: ${hydra:runtime.output_dir}
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: outputs/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}

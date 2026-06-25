@@ -1,0 +1,74 @@
+[
+  {
+    "regime": "gaussian",
+    "elapsed_s": 15.067798852920532,
+    "val": {
+      "report/val/coef_mse": 0.5007703304290771,
+      "report/val/coef_r2": -0.0038165929266860132,
+      "report/val/coef_mse_amb_aware": 0.5003717541694641,
+      "report/val/field_mse_w": 46.11098754300197,
+      "report/val/field_nrmse_w": 0.9972674707678096
+    },
+    "test": {
+      "report/test/coef_mse": 0.5027443170547485,
+      "report/test/coef_r2": -0.005607176313647821,
+      "report/test/coef_mse_amb_aware": 0.5026808381080627,
+      "report/test/field_mse_w": 46.42384201069368,
+      "report/test/field_nrmse_w": 0.9966634923183004
+    }
+  },
+  {
+    "regime": "colored_a1",
+    "elapsed_s": 15.032476902008057,
+    "val": {
+      "report/val/coef_mse": 0.035243429243564606,
+      "report/val/coef_r2": -0.02728365871460836,
+      "report/val/coef_mse_amb_aware": 0.03523438423871994,
+      "report/val/field_mse_w": 0.2182957087672686,
+      "report/val/field_nrmse_w": 0.9973273860994707
+    },
+    "test": {
+      "report/test/coef_mse": 0.03522245213389397,
+      "report/test/coef_r2": -0.02051972176822403,
+      "report/test/coef_mse_amb_aware": 0.03520956635475159,
+      "report/test/field_mse_w": 0.21958165885501632,
+      "report/test/field_nrmse_w": 0.9925500252505907
+    }
+  },
+  {
+    "regime": "colored_a2",
+    "elapsed_s": 11.474957942962646,
+    "val": {
+      "report/val/coef_mse": 0.004923038184642792,
+      "report/val/coef_r2": -0.1549960275817872,
+      "report/val/coef_mse_amb_aware": 0.004923038184642792,
+      "report/val/field_mse_w": 0.010894578339759518,
+      "report/val/field_nrmse_w": 1.792179604078666
+    },
+    "test": {
+      "report/test/coef_mse": 0.004588876850903034,
+      "report/test/coef_r2": -0.06555657689289407,
+      "report/test/coef_mse_amb_aware": 0.004579655826091766,
+      "report/test/field_mse_w": 0.005324336755678113,
+      "report/test/field_nrmse_w": 1.2399205859284728
+    }
+  },
+  {
+    "regime": "sparse_p10",
+    "elapsed_s": 15.145464658737183,
+    "val": {
+      "report/val/coef_mse": 0.10058842599391937,
+      "report/val/coef_r2": -0.0018461610691573593,
+      "report/val/coef_mse_amb_aware": 0.10058842599391937,
+      "report/val/field_mse_w": 2.617597518295498,
+      "report/val/field_nrmse_w": 0.998867578438031
+    },
+    "test": {
+      "report/test/coef_mse": 0.10018868744373322,
+      "report/test/coef_r2": -0.0058030876901682404,
+      "report/test/coef_mse_amb_aware": 0.10014991462230682,
+      "report/test/field_mse_w": 2.498499932756745,
+      "report/test/field_nrmse_w": 0.9998760288622022
+    }
+  }
+]

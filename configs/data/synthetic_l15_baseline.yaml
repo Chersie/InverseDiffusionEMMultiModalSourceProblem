@@ -1,0 +1,25 @@
+# Baseline-experiments synthetic dataset on the full project grid (1°, poles excluded).
+# Configures n_train/n_val/n_test, augmentation hook, and seeds in one place so
+# the S1/S2/S3 stages can override what they need from the CLI.
+_target_: mpinv.cli._builders.build_data_pipeline
+grid:
+  n_phi: 360
+  n_theta: 179
+  theta_start_deg: 1.0
+  theta_end_deg: 179.0
+l_max: 5
+n_train: 8192
+n_val: 1024
+n_test: 1024
+seed_train: 1234
+seed_val: 5678
+seed_test: 9012
+generator:
+  mode: gaussian
+  family_balance: 0.5
+  coef_scale: 1.0
+  mode_dropout_prob: 0.0
+augmentation: null
+aug_seed: 4242
+batch_size: 64
+num_workers: 0

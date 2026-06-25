@@ -1,0 +1,9 @@
+_target_: mpinv.training.trainer.TrainerConfig
+max_epochs: 3
+accum_steps: 1
+log_every_n_steps: 5
+sanity_check: true
+device: cpu
+amp:
+  _target_: mpinv.training.amp.AMPConfig
+  precision: fp32

@@ -1,0 +1,76 @@
+\documentclass[a4paper, openany, 12pt]{article}
+
+%% Стандарт библиографии — GOST 7.1 (gost71u.bst).
+\bibliographystyle{gost71u}
+
+%% подключаем преамбулу: в ней содержится подключение всех необходимых пакетов
+\input{include/preambule.tex}
+
+\begin{document}
+    %% титульник
+    \input{include/title-page.tex}
+    \newpage
+
+    \setcounter{page}{2}
+    \fancyfoot[c]{\thepage}
+    %% надпись над верхним колонтитулом
+    \fancyhead[L]{\input{include/work-title.tex}}
+    \fancyhead[R]{}
+
+    %% аннотация
+    \input{parts/Annotation.tex}
+    \newpage
+
+    %% содержание (генерируется автоматически по заголовкам)
+    \tableofcontents{}
+    \newpage
+
+    %% обозначения и сокращения
+    \input{parts/Notation.tex}
+    \newpage
+
+    %% введение
+    \input{parts/Chapter0.tex}
+    \newpage
+
+    %% Глава 1. Физическая постановка задачи мультипольного анализа
+    \input{parts/Chapter1.tex}
+    \newpage
+
+    %% Глава 2. Генерация обучающей выборки. Признаковое представление и предобработка
+    \input{parts/Chapter2.tex}
+    \newpage
+
+    %% Глава 3. Архитектуры моделей
+    \input{parts/Chapter3.tex}
+    \newpage
+
+    %% Глава 4. Функции потерь и обучение
+    \input{parts/Chapter4.tex}
+    \newpage
+
+    %% Глава 5. Метрики качества и наборы данных оценки
+    \input{parts/Chapter5.tex}
+    \newpage
+
+    %% Глава 6. Эксперименты и результаты
+    \input{parts/Chapter6.tex}
+    \newpage
+
+    %% Глава 7. Программный фреймворк mpinv
+    \input{parts/Chapter7.tex}
+    \newpage
+
+    %% Заключение
+    \input{parts/Conclusion.tex}
+    \newpage
+
+    %% Список использованных источников — BibTeX по ГОСТ 7.1
+    \renewcommand{\refname}{Список использованных источников}
+    \addcontentsline{toc}{section}{Список использованных источников}
+    \bibliography{references}
+
+    %% В зависимости от надобности подключаем раздел "Приложение"
+    % \newpage
+    % \input{parts/Appendix.tex}
+\end{document}
